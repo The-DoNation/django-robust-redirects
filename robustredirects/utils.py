@@ -19,12 +19,12 @@ def get_redirect_patterns():
         Gets the redirect patterns out of the database
         and assigns them to the django patterns object.
     """
-    site_domain = get_current_site().domain
+    #site_domain = get_current_site().domain
     url_patterns = []
     url_list = []
     db_filters = {
         'status': 1,
-        'site__domain': site_domain,
+        #'site__domain': site_domain,
         'is_partial': False,
         'uses_regex': True
     }

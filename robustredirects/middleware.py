@@ -23,6 +23,8 @@ class RedirectMiddleware(object):
             return response
 
         path = request.get_full_path()
+
+        # Check URLs that have regex match
         try:
             return self.try_resolve(path, request)
         except Resolver404:
