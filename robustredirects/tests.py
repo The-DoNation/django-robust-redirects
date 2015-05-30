@@ -1,9 +1,11 @@
+from django.contrib.sites.models import get_current_site
 from django.http import HttpResponseNotFound
 from django.test import TestCase
 from django.test.client import RequestFactory
-from robustredirects.middleware import RedirectMiddleware
-from robustredirects.models import Redirect
-from django.contrib.sites.models import get_current_site
+
+from .middleware import RedirectMiddleware
+from .models import Redirect
+
 
 class TestRedirectMiddleWare(TestCase):
     def setUp(self):
@@ -25,8 +27,9 @@ class TestRedirectMiddleWare(TestCase):
         # Create a redirect
         request = self.factory.get('/test/123/')
 
-        redirect = Redirect(from_url='test/(?P<pk>\d+)/', to_url='somethingelse/(?P<pk>\d+)/',
-                            site=get_current_site(request), uses_regex=True)
+        redirect = Redirect(
+            from_url='test/(?P<pk>\d+)/', to_url='somethingelse/(?P<pk>\d+)/',
+            site=get_current_site(request), uses_regex=True)
 
         redirect.save()
         new_response = self.run_redirect(request)
@@ -50,8 +53,9 @@ class TestRedirectMiddleWare(TestCase):
         # Create a redirect
         request = self.factory.get('/test/123/')
 
-        redirect = Redirect(from_url='test/(?P<pk>\d+)/', to_url='somethingelse/(?P<pk>\d+)/',
-                            site=get_current_site(request), http_status=302, uses_regex=True)
+        redirect = Redirect(
+            from_url='test/(?P<pk>\d+)/', to_url='somethingelse/(?P<pk>\d+)/',
+            site=get_current_site(request), http_status=302, uses_regex=True)
 
         redirect.save()
         new_response = self.run_redirect(request)
@@ -63,8 +67,9 @@ class TestRedirectMiddleWare(TestCase):
         # Create a redirect
         request = self.factory.get('/test/123/')
 
-        redirect = Redirect(from_url='/test/', to_url='/partialtest/', is_partial=True,
-                            site=get_current_site(request), http_status=302)
+        redirect = Redirect(
+            from_url='/test/', to_url='/partialtest/', is_partial=True,
+            site=get_current_site(request), http_status=302)
 
         redirect.save()
         new_response = self.run_redirect(request)
@@ -76,8 +81,9 @@ class TestRedirectMiddleWare(TestCase):
         # Create a redirect
         request = self.factory.get('/test/123/')
 
-        redirect = Redirect(from_url='/test/', to_url='/partialtest/', is_partial=True,
-                            site=get_current_site(request), http_status=301)
+        redirect = Redirect(
+            from_url='/test/', to_url='/partialtest/', is_partial=True,
+            site=get_current_site(request), http_status=301)
 
         redirect.save()
         new_response = self.run_redirect(request)
@@ -101,8 +107,9 @@ class TestRedirectMiddleWare(TestCase):
         # Create a redirect
         request = self.factory.get('/test/123/')
 
-        redirect = Redirect(from_url='/test/', to_url='partialtest/', is_partial=True,
-                            site=get_current_site(request), http_status=302)
+        redirect = Redirect(
+            from_url='/test/', to_url='partialtest/', is_partial=True,
+            site=get_current_site(request), http_status=302)
 
         redirect.save()
         new_response = self.run_redirect(request)

@@ -1,5 +1,6 @@
 # view patterns
-from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect, HttpResponseGone
+from django.http import (
+    HttpResponsePermanentRedirect, HttpResponseRedirect, HttpResponseGone)
 from django.utils.log import getLogger
 logger = getLogger('django.request')
 

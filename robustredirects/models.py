@@ -33,8 +33,9 @@ class Redirect(models.Model):
     from_url = models.CharField(_('From URL'), max_length=255, unique=True,
                                 db_index=True, help_text=from_url_helptext)
 
-    to_url = models.CharField(_('To URL'), max_length=255,
-                              db_index=True, help_text=to_url_helptext, blank=True)
+    to_url = models.CharField(
+        _('To URL'), max_length=255, db_index=True, help_text=to_url_helptext,
+        blank=True)
 
     http_status = models.SmallIntegerField(_('HTTP Status'),
                                            choices=HTTP_STATUS_CHOICES,
@@ -60,5 +61,5 @@ class Redirect(models.Model):
         ordering = ('-uses_regex',)
 
     def __unicode__(self):
-        return _("Redirect: %(from)s --> %(to)s") % {'from': self.from_url, 'to': self.to_url}
-
+        return _("Redirect: %(from)s --> %(to)s") % {
+            'from': self.from_url, 'to': self.to_url}

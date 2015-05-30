@@ -1,9 +1,10 @@
-from django.conf import settings
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import resolve, Resolver404
-from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect, HttpResponseGone
-from robustredirects.models import Redirect
-from robustredirects.utils import replace_partial_url
+from django.http import (
+    HttpResponsePermanentRedirect, HttpResponseRedirect, HttpResponseGone)
+
+from .models import Redirect
+from .utils import replace_partial_url
 
 
 class RedirectMiddleware(object):
@@ -86,7 +87,8 @@ class RedirectMiddleware(object):
                     return HttpResponseGone()
 
                 # Do a replace on the url and do a redirect
-                path = replace_partial_url(path, redirect.from_url, redirect.to_url)
+                path = replace_partial_url(
+                    path, redirect.from_url, redirect.to_url)
 
                 if redirect.http_status == 301:
                     return HttpResponsePermanentRedirect(path)
