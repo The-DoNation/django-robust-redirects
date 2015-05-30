@@ -1,6 +1,7 @@
 from django.conf.urls import url, patterns
-from django.conf import settings
-from models import Redirect
+from django.contrib.sites.models import get_current_site
+
+from .models import Redirect
 
 
 def group_arguments(seq, group=254):
@@ -18,12 +19,12 @@ def get_redirect_patterns():
         Gets the redirect patterns out of the database
         and assigns them to the django patterns object.
     """
-    site_id = settings.SITE_ID
+    site_domain = get_current_site().domain
     url_patterns = []
     url_list = []
     db_filters = {
         'status': 1,
-        'site': site_id,
+        'site__domain': site_domain,
         'is_partial': False,
         'uses_regex': True
     }
