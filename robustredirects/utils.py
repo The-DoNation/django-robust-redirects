@@ -46,6 +46,9 @@ def get_redirect_patterns(request):
     for args in arg_groups:
         url_patterns += patterns('robustredirects.views', *args)
 
+    if not url_patterns:
+        url_patterns = ()
+
     return url_patterns
 
 
