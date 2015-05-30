@@ -58,7 +58,7 @@ class Redirect(models.Model):
         verbose_name = _('redirect')
         verbose_name_plural = _('redirects')
         unique_together = (('site', 'from_url'),)
-        ordering = ('-uses_regex', '-pk')
+        ordering = ('uses_regex', '-pk')
 
     def __unicode__(self):
         return _("Redirect: %(from)s --> %(to)s") % {
