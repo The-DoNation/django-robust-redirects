@@ -14,17 +14,17 @@ def group_arguments(seq, group=254):
     return (seq[pos:pos + group] for pos in range(0, len(seq), group))
 
 
-def get_redirect_patterns():
+def get_redirect_patterns(request):
     """
         Gets the redirect patterns out of the database
         and assigns them to the django patterns object.
     """
-    #site_domain = get_current_site().domain
+    site_domain = get_current_site(request).domain
     url_patterns = []
     url_list = []
     db_filters = {
         'status': 1,
-        #'site__domain': site_domain,
+        'site__domain': site_domain,
         'is_partial': False,
         'uses_regex': True
     }

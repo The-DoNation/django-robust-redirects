@@ -25,13 +25,13 @@ class RedirectAdmin(admin.ModelAdmin):
         'from_url', 'to_url', 'is_partial', 'uses_regex', 'site', 'status']
     form = RedirectModelForm
 
-    def save_model(self, request, object, form, change):
-        import dynamic_urls
-        instance = form.save()
-        # for sites that are not in debug mode reload
-        # the dynamic urls, i'm not sure if this is the
-        # best way though
-        reload(dynamic_urls)
-        return instance
+    # def save_model(self, request, object, form, change):
+    #     import dynamic_urls
+    #     instance = form.save()
+    #     # for sites that are not in debug mode reload
+    #     # the dynamic urls, i'm not sure if this is the
+    #     # best way though
+    #     reload(dynamic_urls)
+    #     return instance
 
 admin.site.register(Redirect, RedirectAdmin)

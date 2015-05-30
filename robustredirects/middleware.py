@@ -4,7 +4,7 @@ from django.http import (
     HttpResponsePermanentRedirect, HttpResponseRedirect, HttpResponseGone)
 
 from .models import Redirect
-from .utils import replace_partial_url
+from .utils import get_redirect_patterns, replace_partial_url
 
 
 class RedirectMiddleware(object):
@@ -13,7 +13,7 @@ class RedirectMiddleware(object):
     """
 
     def try_resolve(self, path, request):
-        urlconf = 'robustredirects.dynamic_urls'
+        urlconf = get_redirect_patterns(request)
         redirect, args, kwargs = resolve(path, urlconf=urlconf)
         return redirect(request, **kwargs)
 
