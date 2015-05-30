@@ -46,10 +46,7 @@ def get_redirect_patterns(request):
     for args in arg_groups:
         url_patterns += patterns('robustredirects.views', *args)
 
-    if not url_patterns:
-        url_patterns = ()
-
-    return url_patterns
+    return tuple(url_patterns)
 
 
 def replace_partial_url(starting_url, replace_from, replace_to):
