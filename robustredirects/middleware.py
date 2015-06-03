@@ -38,6 +38,7 @@ class RedirectMiddleware(object):
         redirects = Redirect.objects.filter(**db_filters)
 
         for redirect in redirects:
+            print "hola"
             from_url = redirect.from_url
             check_path = path
 
