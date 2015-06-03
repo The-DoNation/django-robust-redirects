@@ -19,9 +19,12 @@ class RedirectMiddleware(object):
 
     def process_response(self, request, response):
         current_site = get_current_site(request)
-        site = Site.objects.get(id=3)
 
-        if response.status_code != 404 and current_site.domain != site.domain:
+        if response.status_code != 404 and current_site.id not in (3, 5, 6, 7):
+            # 3: thedonation.com
+            # 5: dogoodforbusiness.com
+            # 6: www.dogoodforbusiness.com
+            # 7: wearedonation.com
             # No need to check for a redirect for non-404 responses.
             return response
 
