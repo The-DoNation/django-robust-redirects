@@ -38,7 +38,6 @@ class RedirectMiddleware(object):
         redirects = Redirect.objects.filter(**db_filters)
 
         for redirect in redirects:
-            print "hola"
             from_url = redirect.from_url
             check_path = path
 
@@ -55,10 +54,6 @@ class RedirectMiddleware(object):
 
             if check_path.endswith('/'):
                 check_path = check_path[:-1]
-
-            if redirect.from_url == '/about/our-blog/how-nation-launch-it-rocket/':
-                print "from_url", from_url
-                print "check_path", check_path
 
             if from_url.lower() == check_path.lower():
                 if redirect.to_url == '':
