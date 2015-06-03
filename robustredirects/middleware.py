@@ -48,6 +48,13 @@ class RedirectMiddleware(object):
             if path.startswith('/'):
                 check_path = path[1:]
 
+            # Strip trailing slashes
+            if from_url.endswith('/'):
+                from_url = from_url[:-1]
+
+            if check_path.endswith('/'):
+                check_path = check_path[:-1]
+
             if from_url.lower() == check_path.lower():
                 if redirect.to_url == '':
                     return HttpResponseGone()
