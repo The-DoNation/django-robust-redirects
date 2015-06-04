@@ -1,4 +1,5 @@
-from django.contrib.sites.models import get_current_site, Site
+from django.conf import settings
+from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import resolve, Resolver404
 from django.http import (
     HttpResponsePermanentRedirect, HttpResponseRedirect, HttpResponseGone)
@@ -20,52 +21,58 @@ class RedirectMiddleware(object):
     def process_response(self, request, response):
         current_site = get_current_site(request)
 
-        if response.status_code != 404 and current_site.id not in (3, 5, 6, 7):
-            # 3: thedonation.com
-            # 5: dogoodforbusiness.com
-            # 6: www.dogoodforbusiness.com
-            # 7: wearedonation.com
+        if response.status_code != 404 and current_site.id not in settings.SITES_TO_REDIRECT:
             # No need to check for a redirect for non-404 responses.
             return response
 
         path = request.get_full_path()
 
-        # No regex redirect was found try a simple replace
+        original = path
+
+        add_trailing = path + '/'
+
+        no_trailing = path
+        # Strip trailing slashes
+        if no_trailing.endswith('/'):
+            no_trailing = path[:-1]
+
+        no_leading = path
+        if no_leading.startswith('/'):
+            no_leading = path[1:]
+
+        has_no_trailing = ''
+        # If it has a trailing slash remove it
+        if path.endswith('/'):
+            has_no_trailing = path[:-1]
+        # If we took a slash off remember that or if not just use the original
+        has_no_trailing = has_no_trailing or path
+        # If it has leading slash remove it
+        if has_no_trailing.startswith('/'):
+            no_slashes_at_all = has_no_trailing[1:]
+        # If we took a slash off remember that or if not just use the result of
+        # the trailing removale
+        no_slashes_at_all = no_slashes_at_all or has_no_trailing
+
+        url_options = [original, no_trailing, no_leading, no_slashes_at_all, add_trailing]
+
         db_filters = {
             'status': 1,
             'site': current_site,
             'is_partial': False,
-            'uses_regex': False
+            'uses_regex': False,
+            'from_url__in': url_options
         }
 
-        redirects = Redirect.objects.filter(**db_filters)
+        # Try a replace
+        try:
+            redirect = Redirect.objects.get(**db_filters)
 
-        for redirect in redirects:
-            from_url = redirect.from_url
-            check_path = path
-
-            # Strip leading slashes
-            if from_url.startswith('/'):
-                from_url = from_url[1:]
-
-            if path.startswith('/'):
-                check_path = path[1:]
-
-            # Strip trailing slashes
-            if from_url.endswith('/'):
-                from_url = from_url[:-1]
-
-            if check_path.endswith('/'):
-                check_path = check_path[:-1]
-
-            if from_url.lower() == check_path.lower():
-                if redirect.to_url == '':
-                    return HttpResponseGone()
-
-                if redirect.http_status == 301:
-                    return HttpResponsePermanentRedirect(redirect.to_url)
-                elif redirect.http_status == 302:
-                    return HttpResponseRedirect(redirect.to_url)
+            if redirect.http_status == 301:
+                return HttpResponsePermanentRedirect(redirect.to_url)
+            elif redirect.http_status == 302:
+                return HttpResponseRedirect(redirect.to_url)
+        except Redirect.DoesNotExist:
+            pass
 
         # Check URLs that have regex match
         try:
