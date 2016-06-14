@@ -1,7 +1,7 @@
 # view patterns
 from django.http import (
     HttpResponsePermanentRedirect, HttpResponseRedirect, HttpResponseGone)
-from django.utils.log import getLogger
+from logging import getLogger
 logger = getLogger('django.request')
 
 
